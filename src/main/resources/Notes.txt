@@ -18,3 +18,5 @@ Execution in Code:
     So the timeTaken on the 1st URl of a session will be zero, and subsequent URL will have timeTaken accordingly.
 
 3. So now, we have our data with Session ID, and timeTaken, we can put this data to a SQL table, and run our queries to generate the statistics.
+
+4. I have manually added dependencies of this project as spark-core-2.2.0.jar, and spark-sql2.2.0.jar
