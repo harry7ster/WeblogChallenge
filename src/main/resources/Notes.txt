@@ -1,0 +1,20 @@
+Imp points:
+1. Each unique session can be identified by combining the IP of the machine, and browser details of the user. That is because each IP can have multiple users as mentioned in the README.
+   Although both users using the same IP can have same browser details, but thats our best bet. We could have recorded MAC address to identify ecah unique user.
+   But a unique user doesn't mean a unique session, because if a user exceeds 15 min (lets say), then session expires, and we need to start new Session if any URL is hit after 15 min.
+   Once we assign the session id to each row, then combination of IP + Session ID + Browser can be used to calculate statistics of each session.
+
+Execution in Code:
+1. Foremost task in this challenge is to Sessionize the data. i.e.create a session ID for each unique user.
+   Each user can be identified by combination of IP + Browser info.
+   So i have read data from the file,and created a PairedRDD with key as IP + URL of the user. (by using mapToPair)
+   ::I have create a POJO to record each record, and the same can be used as the schema for creating SQL table later on.
+
+2. Next, i used groupByKey, to group by the data for each user. Here we have a chance to add the session id to each record.
+    But here the same user could have multiple sessions if the time between subsequent URLs is more than 15 minutes.
+    So in the grouped data, i sort the data with time, and find out the difference between subsequent URL, and if more than 15, then create a separated session id.
+    To sort the data, a comparator is created.
+    Also, i add timeTaken to the data. This field contains time taken by the user from one URL to next URL.
+    So the timeTaken on the 1st URl of a session will be zero, and subsequent URL will have timeTaken accordingly.
+
+3. So now, we have our data with Session ID, and timeTaken, we can put this data to a SQL table, and run our queries to generate the statistics.
